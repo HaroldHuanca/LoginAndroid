@@ -1,6 +1,14 @@
 package com.example.login;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +28,44 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        EditText etUsuario = findViewById(R.id.etUsuario);
+        EditText etPassword = findViewById(R.id.etPassword);
+        CheckBox cbSesion = findViewById(R.id.cbSesion);
+        Button btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
+
+        SharedPreferences preferencia = getSharedPreferences("datos", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferencia.edit();
+
+        if(preferencia.getString("sesion","no").equals("si")){
+            Intent pantalla = new Intent(getApplicationContext(),MainActivity2.class);
+            startActivity(pantalla);
+        }
+
+        btnIniciarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(etPassword.getText().toString().equals("1234")&&etUsuario.getText().toString().equals("Android")){
+                    //iniciar un activity
+                    Intent pantalla = new Intent(getApplicationContext(),MainActivity2.class);
+                    startActivity(pantalla);
+
+                    editor.putString("usuario",etUsuario.getText().toString());
+
+                    if(cbSesion.isChecked()){
+                        editor.putString("sesion","si");
+                    }
+
+                    editor.apply();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"DATOS INCORRECTOS",Toast.LENGTH_SHORT);
+                    etUsuario.setText("");
+                    etPassword.setText("");
+                    etUsuario.setFocusable(true);
+                }
+            }
+        });
+
     }
 }
