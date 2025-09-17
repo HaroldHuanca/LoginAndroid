@@ -38,8 +38,16 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferencia.edit();
 
         if(preferencia.getString("sesion","no").equals("si")){
+            etUsuario.setText(preferencia.getString("usuario",""));
+            etPassword.setText("");
+            etPassword.setFocusable(true);
             Intent pantalla = new Intent(getApplicationContext(),MainActivity2.class);
             startActivity(pantalla);
+        }
+        else{
+            etUsuario.setText("");
+            etPassword.setText("");
+            etUsuario.setFocusable(true);
         }
 
         btnIniciarSesion.setOnClickListener(new View.OnClickListener() {
@@ -55,17 +63,39 @@ public class MainActivity extends AppCompatActivity {
                     if(cbSesion.isChecked()){
                         editor.putString("sesion","si");
                     }
-
+                    else{
+                        etUsuario.setText("");
+                    }
+                    etPassword.setText("");
                     editor.apply();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"DATOS INCORRECTOS",Toast.LENGTH_SHORT);
                     etUsuario.setText("");
                     etPassword.setText("");
                     etUsuario.setFocusable(true);
+                    Toast.makeText(getApplicationContext(),"DATOS INCORRECTOS",Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        EditText etUsuario = findViewById(R.id.etUsuario);
+        EditText etPassword = findViewById(R.id.etPassword);
 
+        SharedPreferences preferencia = getSharedPreferences("datos", Context.MODE_PRIVATE);
+
+        if(preferencia.getString("sesion","no").equals("si")){
+            etUsuario.setText(preferencia.getString("usuario",""));
+            etPassword.setText("");
+            etPassword.setFocusable(true);
+        }
+        else{
+            etUsuario.setText("");
+            etPassword.setText("");
+            etUsuario.setFocusable(true);
+        }
     }
 }
